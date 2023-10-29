@@ -1,0 +1,6 @@
+baseURL = ''
+languageCode = 'en-us'
+title = 'elektron hugo theme example site.'
+
+theme = "elektron-hugo"
+themesDir = "../.."
