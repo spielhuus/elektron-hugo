@@ -1,4 +1,31 @@
-<head>
+<meta charset="utf-8" />
+{{ if .Title }}
+  <title>{{ .Title }} - {{ .Site.Title }}</title>
+{{ else }}
+  <title>{{ .Site.Title }}</title>
+{{ end }}
+{{ with .Site.Params.description }}
+  <meta name="description" content="{{ . }}" />
+{{ end }}
+{{- with .Site.Author.Name }}
+  <meta name="author" content="{{ . }}"/>
+{{- end }}
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="{{ .Site.BaseURL }}css/latex.css" />
+<link rel="stylesheet" href="{{ .Site.BaseURL }}css/main.css" />
+<link rel="stylesheet" href="{{ "/css/spotlight.min.css" | relURL }}" />
+{{ if site.Params.darkmode }}
+<link rel="stylesheet" href="{{ .Site.BaseURL }}css/darkmode.css" />
+{{- end }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/spotlight.js@0.7.8/dist/css/spotlight.min.css">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/spotlight.js@0.7.8/dist/spotlight.bundle.min.js"></script>
+{{ hugo.Generator -}}
+
+
+<!-- <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ .Site.Title }}</title>
@@ -53,4 +80,4 @@
 
         });
       </script>
-</head>
+</head> -->

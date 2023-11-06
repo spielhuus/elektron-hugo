@@ -21,6 +21,7 @@ permalinks:
 
 params:
   description: "hugo theme for elektron notebooks."
+  dateFormat: "2006-01-02" # date format, see https://gohugo.io/functions/format/
 
 frontmatter:
   author: Example

@@ -1,0 +1,85 @@
+{{$allparams := .Params }}
+{{ $name := .Get 0 }}
+{{ $erc := int $.Page.Params.erc.count }}
+{{ $drc := int $.Page.Params.drc.count }}
+
+
+{{ if or (gt $erc 0) (gt $drc 0) }}
+<h1 class="subtitle" id="reports">Reports</h1>
+<table class="table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Board</th>
+        <th>Reference</th>
+        <th>Description</th>
+        <th>Position</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{ range $key, $value := $.Page.Params.erc }}
+      {{ if reflect.IsSlice $value }}
+        {{ range $value }}
+        <tr>
+          <td>erc</td>
+          <td>{{ $key }}</td>
+          <td>{{ .reference }}</td>
+          <td>{{ .description }}</td>
+          <td>{{ .at }}</td>
+        </tr>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    {{ range $key, $value := $.Page.Params.drc }}
+      {{ if reflect.IsSlice $value }}
+        {{ range $value }}
+        <tr>
+          <td>drc</td>
+          <td>{{ $key }}</td>
+          <td>{{ .id }}</td>
+          <td>{{ .description }}</td>
+          <td>{{ .position }}</td>
+        </tr>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    </tbody>
+</table>
+{{ end }}
+
+{{ with $.Page.Params.bom_missing.items }}
+<h1 class="subtitle" id="reports">Missing BOM items</h1>
+<table class="table is-striped is-hoverable is-narrow bom">
+        <col style="width:10%">
+        <col style="width:20%">
+        <col style="width:20%">
+        <col style="width:1%">
+        <col style="width:49%">
+    <thead>
+    <tr>
+        <td> #</td>
+        <td> reference </td>
+        <td> value </td>
+        <td></td>
+        <td> footprint </td>
+    </tr>    
+</thead>
+<tbody>
+    {{ range . }}
+    <tr>
+        <td>{{ .amount }}</td>
+        <td>
+            {{ .references }}
+        </td>
+        <td>{{ .value }}</td>
+        {{ if ne .datasheet "~" }}
+            <td></td>
+        {{ else }}
+            <td></td>
+        {{ end }}
+        <td>{{ .footprint }}</td>
+    </tr>
+    {{ end }}    
+</tbody>
+</table>
+{{ end }}
