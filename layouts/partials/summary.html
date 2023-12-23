@@ -3,11 +3,11 @@
   <div class="card">
     <div class="card-image">
       <a href="{{ .RelPermalink }}">
-        <figure class="image is-4by3">
-          {{ $ressource := (print "images/" $folder "-card.jpg") }}
+        <figure>
+          {{ $ressource := (print "images/" $folder "-panel.jpg") }}
           {{- $image := resources.Get $ressource -}}
           {{ with $image }}
-            <img src="{{ (.Resize "320x").Permalink }}" alt="Placeholder image" class="modal-button" data-target="modal-image2">
+            <img src="{{ (.Resize "x320").Permalink }}" alt="Placeholder image" class="modal-button" data-target="modal-image2">
           {{ end }}
         </figure>
       </a>

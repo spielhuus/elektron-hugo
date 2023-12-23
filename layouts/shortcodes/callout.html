@@ -1,3 +1,5 @@
+{{ $pcblayers := slice "F_Cu" "B_Cu" "F_Mask" "B_Mask" "F_SilkS" "B_SilkS" }}
+
 <div class="columns is-multiline is-centered my-6">
     {{ if isset $.Page.Params "schema" }}
     <div class="column is-3 has-text-centered">
@@ -7,7 +9,7 @@
         <p class="subtitle mt-3">schema</p>
         {{ range $key, $value := $.Page.Params.schema }}
           <span class="spotlight" data-src="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "../../content/" $value }}" data-fit="contain">
-            <a href="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "../../content/" $value }}" class="button is-light">
+            <a href="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "content/" $value }}" class="button is-light">
                 {{ $key }}
             </a>
           </span>
@@ -20,12 +22,51 @@
             <i class="fas fa-code-branch fa-4x"></i>
         </div>
         <p class="subtitle mt-3">PCB</p>
-        {{ range $key, $value := $.Page.Params.pcb }}
-          <span class="spotlight" data-src="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "../../content/" $value }}" data-fit="contain">
-            <a href="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "../../content/" $value }}" class="button is-light">
-                {{ $key }}
+        {{ range $pcb := $.Page.Params.pcb }}
+          <span class="spotlight" data-media="node" data-src="#fragment-{{ $pcb.name }}" data-fit="contain">
+            <a data-media="node" data-src="#fragment-{{ $pcb.name }}" class="button is-light">
+                {{ $pcb.name }}
             </a>
           </span>
+          <!-- div style="display: none" -->
+          <div style="width: 100%; height: 100%; display: none;">
+            <section class="hero is-fullheight" id="fragment-{{ $pcb.name }}">
+              <div class="hero-body is-fullheight">
+                <div style="width: 100%;" class="columns is-fullheight">
+                  <div class="column is-four-fifths has-text-right">
+                      <svg width="auto" height="800px" id="pcb_{{ $pcb.name }}"
+                        viewBox="0 0 {{ $pcb.width }} {{ $pcb.height }}"
+                        preserveAspectRatio="xMidyMid meet"
+                        >
+                      {{ range $pcb.layers }}
+                        <use id="pcb_{{ $pcb.name }}-{{ . }}" xlink:href="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "../../content/" $pcb.file }}#{{ $pcb.name }}-{{ . }}"></use>
+                      {{ end }}
+                      </svg>
+                  </div>
+                  <div class="column">
+                      <h1 class="subtitle is-5 has-text-black">PCB Layers:</h1>
+                      {{ range $pcb.layers }}
+                        <input type="checkbox" name="{{ $pcb.name }}{{ . }}" value="{{ $pcb.name }}-{{ . }}" id="check_{{ $pcb.name }}-{{ . }}" checked></input>
+                        <label class="has-text-black" for="check_{{ $pcb.name }}-{{ . }}">{{ . }}</label>
+                        <br/>
+                      {{ end }}
+                  </div>
+                </div>
+              </div>
+                <script type="text/javascript">
+                {{ range $pcb.layers }}
+                  d3.select("#check_{{ $pcb.name | safeJS }}-{{ . | safeJS }}").on("input", function(event) {
+                    if (event.currentTarget.checked) {
+                      console.log(d3.select("#{{ $pcb.name }}-{{ . }}").toString());
+                      d3.select("#pcb_{{ $pcb.name }}-{{ . }}").style("opacity", 1)
+                    } else {
+                      d3.select("#pcb_{{ $pcb.name }}-{{ . }}").style("opacity", 0)
+                    }
+                  });
+                {{ end }}
+                </script>
+              </section>
+          </div>
         {{ end }}
     </div>
     {{ end }}
@@ -40,6 +81,7 @@
                 {{ $key }}
             </a>
         {{ end }}
+
     </div>
     {{ end }}
 </div>

@@ -1,41 +1,181 @@
-{{ if .IsHome }}
-{{ if .Site.Params.homeTitle }}
-  {{ $.Scratch.Set "title" .Site.Params.homeTitle }}
-{{ else }}
-  {{ $.Scratch.Set "title" .Site.Title }}
-{{ end }}
-{{ else }}
-{{ $.Scratch.Set "title" .Title }}
-{{ end }}
+<style scoped>
+  .hero_title {
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-size: cover; 
+      {{ if .IsHome }}
+      {{ $ressource := (print "images/elektrophon-logo.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }}
+        background-image: url({{ (.Resize "1280x").Permalink }}); 
+      {{ end }}
 
-{{ $title := $.Scratch.Get "title" }}
-{{ if $title }}
-<header>
-  {{ partial "nav.html" . }}
-  <div class="intro-header">
-    <div class="container">
-      <div class="{{ .Type }}-heading">
-        {{ if eq .Type "list" }}
-          <h1>{{ if .Data.Singular }}#{{ end }}{{ .Title }}</h1>
-        {{ else }}
-          <h1>{{ with $title }}{{.}}{{ else }}<br/>{{ end }}</h1>
-          {{ if .IsHome }}
-            <p class="author">{{ with .Site.Author.name }}{{.}}{{ else }}<br/>{{ end }}</p>
+      {{ else if (eq .Params.Title "module") }}   
+      {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }}
+        background-image: url({{ (.Resize "1280x").Permalink }}); 
+      {{ end }}
+      
+      {{ else if (eq .Params.Title "status") }}   
+      {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }}
+        background-image: url({{ (.Resize "1280x").Permalink }}); 
+      {{ end }}
+      
+      {{ else if (eq .Params.Title "elektrophon") }}   
+      {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }}
+        background-image: url({{ (.Resize "1280x").Permalink }}); 
+      {{ end }}
 
-            {{ if .Site.Author.abstract }}
-              <div class="abstract">
-                <h5>Abstract</h5>
-                <p>
-                  {{ .Site.Author.abstract }}
-                </p>
-              </div>
-            {{ end }}
-          {{ end }}
+      {{ else if (eq .Params.Title "article") }}   
+      {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }}
+        background-image: url({{ (.Resize "1280x").Permalink }}); 
+      {{ end }}
+
+      {{ else if (ne .Params.Title "article") }}
+      {{ $folder := (index (split .File.Dir "/") 1)}}
+      {{ $ressource := (print "images/" $folder "-landscape.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }} background-image: url({{ (.Resize "1280x").Permalink }}); {{ end }}
+      {{ end }}
+  }
+  @media (max-width: 980px) {
+      .hero {
+        {{ if .IsHome }}
+        {{ $ressource := (print "images/elektrophon-logo_mobile.jpg") }}
+        {{- $image := resources.Get $ressource -}}
+        {{ with $image }}
+          background-image: url({{ (.Resize "1280x").Permalink }}); 
         {{ end }}
+  
+        {{ else if isset .Params "hero_image" }}      
+        {{ $ressource := (print "images/" .Params.hero_mobile ) }}
+        {{- $image := resources.Get $ressource -}}
+        {{ with $image }}
+          background-image: url({{ (.Resize "1280x").Permalink }}); 
+        {{ end }}
+  
+        {{ else if (or (eq .Params.Title "module") (eq .Params.Title "article") (eq .Params.Title "about")) }}   
+        {{ $ressource := (print "images/" .Params.Title "_mobile.jpg") }}
+        {{- $image := resources.Get $ressource -}}
+        {{ with $image }}
+          background-image: url({{ (.Resize "1280x").Permalink }}); 
+        {{ end }}
+        
+        {{ else }}
+        {{ $folder := (index (split .File.Dir "/") 1)}}
+        {{ $ressource := (print "images/" $folder "-portrait.jpg") }}
+        {{- $image := resources.Get $ressource -}}
+        {{ with $image }}
+          background-image: url({{ (.Resize "1280x").Permalink }}); 
+        {{ end }}
+        {{ end }}
+        }
+  }
+</style>
+
+<!-- section class="hero {{ if isset .Params "hero_image" }}is-fullheight{{ end }} hero_title" -->
+<section class="hero {{ if isset .Params "has-hero" }}is-fullheight{{ end }} hero_title">
+  {{ if isset .Params "hero_image" }}
+  {{ end }}
+  <div class="hero-head hero-darken">
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-brand">
+          <a href="{{ .Site.BaseURL }}/" class="navbar-item title has-text-white">{{ .Site.Title }}</a>
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+          <div class="navbar-end">
+            {{ range $name, $taxonomy := .Site.Taxonomies.categories }}
+            <a class="navbar-item has-text-white" href="{{ "/categories/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a>
+            {{ end }}
+            <a class="navbar-item has-text-white" href="{{ .Site.BaseURL }}/status/"><span>status</span></a>
+            <a class="navbar-item has-text-white" href="{{ .Site.BaseURL }}/elektrophon/"><span>pdoc</span></a>
+            <a class="navbar-item has-text-white" href="{{ .Site.BaseURL }}/about/"><span>about</span></a>
+          </div>
+        </div>
       </div>
+    </nav>
+  </div>
+
+  <div class="hero-body hero-darken">
+    <div class="container adjust">
+        {{ if in .Params.Categories "module" }}
+        <div class="field is-grouped is-hidden-mobile">
+          <div class="control">
+            <div class="tags has-addons is-normal">
+              {{ if eq .Params.Version 0 }}
+              <span class="tag is-dark">status</span>
+              <span class="tag is-warning">Draft</span>
+              {{ else }}
+              <span class="tag is-dark">Version </span>
+              <span class="tag is-success">{{ .Params.version }}</span>
+              {{ end }}
+            </div>
+          </div>
+
+          {{ if eq .Params.erc.count 0 }}
+          <div class="control">
+            <div class="tags has-addons is-normal">
+              <span class="tag is-dark">erc</span>
+              <span class="tag is-success">ok</span>
+            </div>
+          </div>
+          {{ else }}
+          <div class="control">
+              <a class="tags has-addons is-normal" href="#tests">
+                <span class="tag is-dark">erc</span>
+                <span class="tag is-danger">{{ .Params.erc.count }}</span>
+            </a>
+          </div>
+          {{ end }}
+
+          {{ if eq .Params.drc.count 0 }}
+          <div class="control">
+            <div class="tags has-addons is-normal">
+              <span class="tag is-dark">drc</span>
+              <span class="tag is-success">ok</span>
+            </div>
+          </div>
+          {{ else }}
+          <div class="control">
+              <a class="tags has-addons is-normal" href="#tests">
+                <span class="tag is-dark">drc</span>
+                <span class="tag is-danger">{{ .Params.drc.count }}</span>
+            </a>
+          </div>
+          {{ end }}
+
+          <div class="control">
+            <a class="tags has-addons is-normal"
+              href="https://github.com/spielhuus/elektrophon/tree/master/content/{{ .Params.Title }}">
+              <span class="tag is-dark"><i class="fab fa-github" aria-hidden="true"></i></span>
+              <span class="tag is-link">github</span>
+            </a>
+          </div>
+        </div>
+        {{ end }}
+      <!-- end tags-->
+
+      {{ if and (not .IsHome) (isset .Params "title") }}
+          <h1 class="title is-size-3 has-text-white">{{ replace  .Params.Title "_" " " }}</h1>
+      {{ end }}
+        {{ if isset .Params "subtitle" }}
+        <p class="has-text-white is-size-5 has-text-weight-semibold">{{ .Params.subtitle }}</p>
+        {{ end }}
     </div>
   </div>
-</header>
-{{ else }}
-<div class="intro-header"></div>
-{{ end }}
+</section>
