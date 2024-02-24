@@ -39,11 +39,8 @@
         background-image: url({{ (.Resize "1280x").Permalink }}); 
       {{ end }}
 
-      {{ else if (ne .Params.Title "article") }}
-      {{ $folder := (index (split .File.Dir "/") 1)}}
-      {{ $ressource := (print "images/" $folder "-landscape.jpg") }}
-      {{- $image := resources.Get $ressource -}}
-      {{ with $image }} background-image: url({{ (.Resize "1280x").Permalink }}); {{ end }}
+      {{ else }}
+      background-image: url(none.jpg);
       {{ end }}
   }
   @media (max-width: 980px) {
@@ -70,19 +67,14 @@
         {{ end }}
         
         {{ else }}
-        {{ $folder := (index (split .File.Dir "/") 1)}}
-        {{ $ressource := (print "images/" $folder "-portrait.jpg") }}
-        {{- $image := resources.Get $ressource -}}
-        {{ with $image }}
-          background-image: url({{ (.Resize "1280x").Permalink }}); 
-        {{ end }}
+          background-image: url(none.jpg); 
         {{ end }}
         }
   }
 </style>
 
 <!-- section class="hero {{ if isset .Params "hero_image" }}is-fullheight{{ end }} hero_title" -->
-<section class="hero {{ if isset .Params "has-hero" }}is-fullheight{{ end }} hero_title">
+<section class="hero {{ if (and (not (eq .Params.Title "module")) (not (eq .Params.Title "article")) (not (eq .Params.Title "about")) (not ( eq .Params.Title "status"))) }}is-fullheight{{ end }} hero_title">
   {{ if isset .Params "hero_image" }}
   {{ end }}
   <div class="hero-head hero-darken">
