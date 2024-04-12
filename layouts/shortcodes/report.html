@@ -38,7 +38,11 @@
           <td>{{ $key }}</td>
           <td>{{ .id }}</td>
           <td>{{ .description }}</td>
-          <td>{{ .position }}</td>
+          <td>
+            {{ range $item := .items }}
+            {{ $item.description }} ({{$item.pos_x}}x{{$item.pos_y}})<br/>
+            {{ end }}
+          </td>
         </tr>
         {{ end }}
       {{ end }}
