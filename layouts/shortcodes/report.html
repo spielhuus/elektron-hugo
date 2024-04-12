@@ -9,10 +9,11 @@
 <table class="table">
     <thead>
       <tr>
-        <th>Type</th>
-        <th>Board</th>
-        <th>Reference</th>
-        <th>Description</th>
+        <th width="6%">Type</th>
+        <th width="6%">Board</th>
+        <th width="8%">Reference</th>
+        <th width="7%">Severity</th>
+        <th width="40%">Description</th>
         <th>Position</th>
       </tr>
     </thead>
@@ -24,6 +25,7 @@
           <td>erc</td>
           <td>{{ $key }}</td>
           <td>{{ .reference }}</td>
+          <td></td>
           <td>{{ .description }}</td>
           <td>{{ .at }}</td>
         </tr>
@@ -37,6 +39,7 @@
           <td>drc</td>
           <td>{{ $key }}</td>
           <td>{{ .id }}</td>
+          <td>{{ .severity }}</td>
           <td>{{ .description }}</td>
           <td>
             {{ range $item := .items }}
