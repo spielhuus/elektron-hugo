@@ -32,15 +32,26 @@
         background-image: url({{ (.Resize "1280x").Permalink }}); 
       {{ end }}
 
-      {{ else if (eq .Params.Title "article") }}   
+      {{ else if (eq .Params.Title "about") }}   
       {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
       {{- $image := resources.Get $ressource -}}
       {{ with $image }}
         background-image: url({{ (.Resize "1280x").Permalink }}); 
       {{ end }}
 
+      {{ else if (or (eq .Data.Term "module") (eq .Data.Term "article")) }}   
+      {{ $ressource := (print "images/" .Data.Term "-landscape.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }}
+        background-image: url({{ (.Resize "1280x").Permalink }}); 
+      {{ end }}
+
       {{ else }}
-      background-image: url(none.jpg);
+      {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
+      {{- $image := resources.Get $ressource -}}
+      {{ with $image }}
+        background-image: url({{ (.Resize "1280x").Permalink }}); 
+      {{ end }}
       {{ end }}
   }
   @media (max-width: 980px) {
@@ -58,16 +69,27 @@
         {{ with $image }}
           background-image: url({{ (.Resize "1280x").Permalink }}); 
         {{ end }}
-  
-        {{ else if (or (eq .Params.Title "module") (eq .Params.Title "article") (eq .Params.Title "about")) }}   
-        {{ $ressource := (print "images/" .Params.Title "_mobile.jpg") }}
+      
+        {{ else if (eq .Params.Title "about") }}   
+        {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
         {{- $image := resources.Get $ressource -}}
         {{ with $image }}
           background-image: url({{ (.Resize "1280x").Permalink }}); 
         {{ end }}
-        
+
+        {{ else if (or (eq .Data.Term "module") (eq .Data.Term "article")) }}   
+        {{ $ressource := (print "images/" .Data.Term "-landscape.jpg") }}
+        {{- $image := resources.Get $ressource -}}
+        {{ with $image }}
+          background-image: url({{ (.Resize "1280x").Permalink }}); 
+        {{ end }}
+    
         {{ else }}
-          background-image: url(none.jpg); 
+        {{ $ressource := (print "images/" .Params.Title "-portrait.jpg") }}
+        {{- $image := resources.Get $ressource -}}
+        {{ with $image }}
+          background-image: url({{ (.Resize "1280x").Permalink }}); 
+        {{ end }}
         {{ end }}
         }
   }

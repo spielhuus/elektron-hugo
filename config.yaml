@@ -3,7 +3,7 @@ languageCode: en-us
 title: elektron-hugo
 # googleAnalytics: ""
 # disqusShortname: ""
-# preserveTaxonomyNames: true
+preserveTaxonomyNames: true
 # footnotereturnlinkcontents: ↩
 # disableHugoGeneratorInject: true
 # pluralizeListTitles: false
