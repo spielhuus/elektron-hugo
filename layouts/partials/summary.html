@@ -8,6 +8,12 @@
           {{- $image := resources.Get $ressource -}}
           {{ with $image }}
             <img src="{{ (.Resize "x320").Permalink }}" alt="Placeholder image" class="modal-button" data-target="modal-image2">
+          {{ else }}
+            {{ $ressource := (print "images/default-panel.jpg") }}
+            {{- $image := resources.Get $ressource -}}
+            {{ with $image }}
+              <img src="{{ (.Resize "x320").Permalink }}" alt="Placeholder image" class="modal-button" data-target="modal-image2">
+            {{ end }}
           {{ end }}
         </figure>
       </a>

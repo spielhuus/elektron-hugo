@@ -23,31 +23,25 @@
         </div>
         <p class="subtitle mt-3">PCB</p>
         {{ range $pcb := $.Page.Params.pcb }}
+        {{ with $pcb  }}
           <span class="spotlight" data-media="node" data-src="#fragment-{{ $pcb.name }}" data-fit="contain">
             <a data-media="node" data-src="#fragment-{{ $pcb.name }}" class="button is-light">
                 {{ $pcb.name }}
             </a>
           </span>
-          <!-- div style="display: none" -->
+
           <div style="width: 100%; height: 100%; display: none;">
             <section class="hero is-fullheight" id="fragment-{{ $pcb.name }}">
               <div class="hero-body is-fullheight">
                 <div style="width: 100%;" class="columns is-fullheight">
                   <div class="column is-four-fifths has-text-right">
-                      <svg width="auto" height="800px" id="pcb_{{ $pcb.name }}"
-                        viewBox="0 0 {{ $pcb.width }} {{ $pcb.height }}"
-                        preserveAspectRatio="xMidyMid meet"
-                        >
-                      {{ range $pcb.layers }}
-                        <use id="pcb_{{ $pcb.name }}-{{ . }}" xlink:href="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "../../content/" $pcb.file }}#{{ $pcb.name }}-{{ . }}"></use>
-                      {{ end }}
-                      </svg>
+                        <object data="{{ $.Site.BaseURL }}/{{ strings.TrimPrefix "../../content/" .file }}" width="auto" height="800px" id="pcb_{{ $pcb.name }}"> </object>
                   </div>
                   <div class="column">
                       <h1 class="subtitle is-5 has-text-black">PCB Layers:</h1>
-                      {{ range $pcb.layers }}
-                        <input type="checkbox" name="{{ $pcb.name }}{{ . }}" value="{{ $pcb.name }}-{{ . }}" id="check_{{ $pcb.name }}-{{ . }}" checked></input>
-                        <label class="has-text-black" for="check_{{ $pcb.name }}-{{ . }}">{{ . }}</label>
+                      {{ range .layers }}
+                        <input type="checkbox" name="{{ $pcb.name }}{{ replace . "." "_" }}" value="{{ $pcb.name }}_{{ replace . "." "_" }}" id="check_{{ $pcb.name }}-{{ replace . "." "_" }}" checked></input>
+                        <label class="has-text-black" for="check_{{ $pcb.name }}-{{ replace . "." "_" }}">{{ . }}</label>
                         <br/>
                       {{ end }}
                   </div>
@@ -55,18 +49,28 @@
               </div>
                 <script type="text/javascript">
                 {{ range $pcb.layers }}
-                  d3.select("#check_{{ $pcb.name | safeJS }}-{{ . | safeJS }}").on("input", function(event) {
-                    if (event.currentTarget.checked) {
-                      console.log(d3.select("#{{ $pcb.name }}-{{ . }}").toString());
-                      d3.select("#pcb_{{ $pcb.name }}-{{ . }}").style("opacity", 1)
-                    } else {
-                      d3.select("#pcb_{{ $pcb.name }}-{{ . }}").style("opacity", 0)
-                    }
+                  d3.select("#check_{{ $pcb.name | safeJS }}-{{ replace . "." "_" | safeJS }}").on("input", function(event) {
+                      var svgObject = document.getElementById('pcb_{{ $pcb.name }}');
+                      var svgDoc = svgObject.contentDocument;
+                      if (svgDoc) {
+                        var graphics = svgDoc.getElementsByClassName('{{ $pcb.name }}_{{ replace . "." "_" }}');
+
+                        for (var i = 0; i < graphics.length; i++) {
+                                console.log("G");
+                          var graphic = graphics[i];
+                          if (graphic.style.display === 'none') {
+                            graphic.style.display = 'inline';
+                          } else {
+                            graphic.style.display = 'none';
+                          }
+                        }
+                      }
                   });
                 {{ end }}
                 </script>
               </section>
           </div>
+        {{ end }}
         {{ end }}
     </div>
     {{ end }}

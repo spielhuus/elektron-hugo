@@ -1,17 +1,15 @@
-{{ $message := .Get "message" }}
-{{ $inner := trim .Inner "\n" }}
-
-{{ if or (ne $message "") (ne $inner "")  }}
+{{- $inner := .Inner -}}
+{{- $cell := .Get "cell" -}}
+{{- $title := .Get "title" -}}
+{{- $message := .Get "message" -}}
+{{- $line := .Get "line" -}}
+{{- $start_line := .Get "start_line" -}}
+{{- $line_index := (add (sub (int $line) (int $start_line)) 1) -}}
+{{- $highlight_lines := dict "linenos" "table" "hl_Lines" $line_index "linenostart" $start_line "style" "pygments" -}}
+<p>"{{ .Inner }}"</p>
 <article class="message is-danger">
-  {{ if (ne $message "") }}
   <div class="message-header is-family-monospace">
-    {{ .Get "message" }}
+    {{ $cell }}::{{ $title }}::{{ $line }} = {{ $message }}
   </div>
-  {{ end }}
-  {{ if (ne .Inner "")  }}
-  <div class="message-body is-family-monospace pre">
-    {{ .Inner }}
-  </div>
-  {{ end }}
+  {{ if (ne .Inner "")  }}<div class="message-body is-family-monospace pre">{{ highlight .Inner "python" $highlight_lines }}</div>{{ end }}
 </article>
-{{ end }}

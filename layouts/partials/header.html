@@ -46,13 +46,20 @@
         background-image: url({{ (.Resize "1280x").Permalink }}); 
       {{ end }}
 
-      {{ else }}
-      {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
-      {{- $image := resources.Get $ressource -}}
-      {{ with $image }}
-        background-image: url({{ (.Resize "1280x").Permalink }}); 
-      {{ end }}
-      {{ end }}
+        {{ else }}
+          {{ $ressource := (print "images/" .Params.Title "-landscape.jpg") }}
+          {{- $image := resources.Get $ressource -}}
+          {{ with $image }}
+            background-image: url({{ (.Resize "1280x").Permalink }}); 
+          {{ else }}
+            {{ with $ressource := (print "images/default-landscape.jpg") }}
+              {{- $image := resources.Get $ressource -}}
+              {{ with $image }}
+                background-image: url({{ (.Resize "1280x").Permalink }}); 
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
   }
   @media (max-width: 980px) {
       .hero {
@@ -85,18 +92,25 @@
         {{ end }}
     
         {{ else }}
-        {{ $ressource := (print "images/" .Params.Title "-portrait.jpg") }}
-        {{- $image := resources.Get $ressource -}}
-        {{ with $image }}
-          background-image: url({{ (.Resize "1280x").Permalink }}); 
-        {{ end }}
+          {{ $ressource := (print "images/" .Params.Title "-portrait.jpg") }}
+          {{- $image := resources.Get $ressource -}}
+          {{ with $image }}
+            background-image: url({{ (.Resize "1280x").Permalink }}); 
+          {{ else }}
+            {{ with $ressource := (print "images/default-portrait.jpg") }}
+              {{- $image := resources.Get $ressource -}}
+              {{ with $image }}
+                background-image: url({{ (.Resize "1280x").Permalink }}); 
+              {{ end }}
+            {{ end }}
+          {{ end }}
         {{ end }}
         }
   }
 </style>
 
-<!-- section class="hero {{ if isset .Params "hero_image" }}is-fullheight{{ end }} hero_title" -->
-<section class="hero {{ if (and (not (eq .Params.Title "module")) (not (eq .Params.Title "article")) (not (eq .Params.Title "about")) (not ( eq .Params.Title "status"))) }}is-fullheight{{ end }} hero_title">
+<section class="hero {{ if (eq .Params.hero "is-small") }}is-small{{ else }}is-fullheight{{ end }} hero_title">
+<!-- section class="hero {{ if (and (not (eq .Params.Title "module")) (not (eq .Params.Title "article")) (not (eq .Params.Title "about")) (not ( eq .Params.Title "status"))) }}is-fullheight{{ end }} hero_title" -->
   {{ if isset .Params "hero_image" }}
   {{ end }}
   <div class="hero-head hero-darken">
